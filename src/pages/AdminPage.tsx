@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from "react";
-import { Lock, Plus, Pencil, Trash2, Check, X, LogOut, Search } from "lucide-react";
-import { adminLogin, adminCreateTrack, adminUpdateTrack, adminDeleteTrack, adminListTracks } from "@/services/admin";
+import { Lock, Plus, Pencil, Trash2, Check, X, LogOut, Search, Upload } from "lucide-react";
+import { adminLogin, adminCreateTrack, adminUpdateTrack, adminDeleteTrack, adminListTracks, adminUploadAudio } from "@/services/admin";
 import type { TrackInput } from "@/types";
 
 export default function AdminPage() {
@@ -188,6 +188,7 @@ function AdminDashboard({ token, onLogout }: { token: string; onLogout: () => vo
 
       {creating && (
         <TrackForm
+          token={token}
           onSubmit={async (track) => {
             try {
               await adminCreateTrack(token, track);
@@ -204,6 +205,7 @@ function AdminDashboard({ token, onLogout }: { token: string; onLogout: () => vo
       {editing && (
         <TrackForm
           initial={editing}
+          token={token}
           onSubmit={async (track) => {
             try {
               await adminUpdateTrack(token, track);
@@ -303,10 +305,12 @@ const emptyTrack: TrackInput = {
 
 function TrackForm({
   initial,
+  token,
   onSubmit,
   onCancel,
 }: {
   initial?: TrackInput;
+  token: string;
   onSubmit: (track: TrackInput) => Promise<void>;
   onCancel: () => void;
 }) {
@@ -314,6 +318,7 @@ function TrackForm({
   const [moodInput, setMoodInput] = useState(initial?.moods.join(", ") ?? "");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
+  const [uploadingFile, setUploadingFile] = useState(false);
   const [success, setSuccess] = useState(false);
 
   const set = (k: keyof TrackInput, v: unknown) => setTrack((p) => ({ ...p, [k]: v }));
@@ -354,6 +359,22 @@ function TrackForm({
       setErrors({ form: "Failed to save. Check your connection and try again." });
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingFile(true);
+    try {
+      const url = await adminUploadAudio(token, file);
+      setTrack((p) => ({ ...p, audioUrl: url }));
+      // Optional: attempt to parse duration from file if possible, or leave to manual
+    } catch (err) {
+      setErrors((prev) => ({ ...prev, audioUrl: "Failed to upload file to R2" }));
+    } finally {
+      setUploadingFile(false);
     }
   };
 
@@ -460,12 +481,31 @@ function TrackForm({
       </Field>
 
       <Field label="audio url *" error={errors.audioUrl}>
-        <input
-          value={track.audioUrl}
-          onChange={(e) => set("audioUrl", e.target.value)}
-          className="field-input"
-          placeholder="https://files.listune.app/track-name.wav"
-        />
+        <div className="flex flex-col sm:flex-row gap-2">
+          <input
+            value={track.audioUrl}
+            onChange={(e) => set("audioUrl", e.target.value)}
+            className="field-input flex-1"
+            placeholder="https://files.listune.app/midwest-emo/track-name.wav"
+          />
+          <div className="relative shrink-0">
+            <input
+              type="file"
+              accept="audio/*"
+              onChange={handleFileUpload}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              disabled={uploadingFile}
+            />
+            <div
+              className={`flex items-center gap-2 px-4 py-2.5 border border-foreground font-mono text-xs uppercase tracking-wider transition-colors ${
+                uploadingFile ? "opacity-50 bg-secondary" : "hover:bg-yellow-tape cursor-pointer"
+              }`}
+            >
+              <Upload size={14} />
+              {uploadingFile ? "uploading..." : "upload to r2"}
+            </div>
+          </div>
+        </div>
       </Field>
 
       {errors.form && <p className="text-destructive text-sm font-mono">{errors.form}</p>}

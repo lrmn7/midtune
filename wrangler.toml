@@ -17,3 +17,8 @@ database_id = "7798c630-af19-4039-a005-1febfd86d475"
 [[kv_namespaces]]
 binding = "CACHE"
 id = "dd82b6320db34c7792ce20ee4e2fa628"
+
+# ─── Cloudflare R2 Storage ───
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "pictune"
