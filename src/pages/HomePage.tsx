@@ -6,6 +6,7 @@ import { TrackCover } from "@/components/tracks/TrackCover";
 import { Waveform } from "@/components/tracks/Waveform";
 import { usePlayer } from "@/context/PlayerContext";
 import { useTracks } from "@/hooks/useTracks";
+import { downloadTrack } from "@/services/api";
 import type { Track } from "@/types";
 
 export default function HomePage() {
@@ -99,14 +100,13 @@ export default function HomePage() {
                 {isFeaturedPlaying ? <Pause size={14} /> : <Play size={14} />}{" "}
                 {isFeaturedPlaying ? "playing…" : "play"}
               </button>
-              <a
-                href={featured.audioUrl}
-                download
+              <button
+                onClick={() => downloadTrack(featured)}
                 className="flex items-center gap-2 px-4 py-2 border border-foreground font-mono text-xs uppercase tracking-wider cursor-pointer hover:bg-yellow-tape transition-colors"
                 aria-label="Download track"
               >
                 <Download size={14} /> download
-              </a>
+              </button>
             </div>
           </div>
           )}
