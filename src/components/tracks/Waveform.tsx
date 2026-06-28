@@ -25,12 +25,20 @@ export function Waveform({ seed, className = "", active = false }: Props) {
             opacity={active ? 0.85 : 0.55}
           >
             {active && (
-              <animate
-                attributeName="height"
-                values={`${height};${Math.max(2, height - 6)};${height}`}
-                dur={`${0.6 + (i % 5) * 0.15}s`}
-                repeatCount="indefinite"
-              />
+              <>
+                <animate
+                  attributeName="height"
+                  values={`${height};${Math.max(2, height - 6)};${height}`}
+                  dur={`${0.6 + (i % 5) * 0.15}s`}
+                  repeatCount="indefinite"
+                />
+                <animate
+                  attributeName="y"
+                  values={`${(28 - height) / 2};${(28 - Math.max(2, height - 6)) / 2};${(28 - height) / 2}`}
+                  dur={`${0.6 + (i % 5) * 0.15}s`}
+                  repeatCount="indefinite"
+                />
+              </>
             )}
           </rect>
         );
