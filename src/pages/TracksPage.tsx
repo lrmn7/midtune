@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { Search, X } from "lucide-react";
-import { ALL_MOODS, ALL_KEYS, ALL_YEARS } from "@/data/tracks";
 import { TrackCard } from "@/components/tracks/TrackCard";
 import { useTracks } from "@/hooks/useTracks";
 import type { Track } from "@/types";
@@ -16,6 +15,28 @@ export default function TracksPage() {
   const [bpmMax, setBpmMax] = useState(160);
   const [durMax, setDurMax] = useState(360);
   const [sort, setSort] = useState<Sort>("newest");
+
+  const dynamicMoods = useMemo(() => {
+    const s = new Set<string>();
+    tracks.forEach(t => t.moods.forEach(m => s.add(m)));
+    return Array.from(s).sort();
+  }, [tracks]);
+
+  const dynamicYears = useMemo(() => {
+    const s = new Set<string>();
+    tracks.forEach(t => {
+      if (t.year) s.add(t.year.substring(0, 4));
+    });
+    return Array.from(s).sort((a, b) => b.localeCompare(a));
+  }, [tracks]);
+
+  const dynamicKeys = useMemo(() => {
+    const s = new Set<string>();
+    tracks.forEach(t => {
+      if (t.tuning) s.add(t.tuning);
+    });
+    return Array.from(s).sort();
+  }, [tracks]);
 
   const filtered = useMemo(() => {
     let r: Track[] = tracks.filter((t) => {
@@ -92,31 +113,37 @@ export default function TracksPage() {
         </select>
       </div>
       <div className="paper-card p-4 mb-6">
-        <FilterRow label="mood">
-          {ALL_MOODS.map((m) => (
-            <Chip key={m} active={mood === m} onClick={() => setMood(mood === m ? null : m)}>
-              {m}
-            </Chip>
-          ))}
-        </FilterRow>
-        <FilterRow label="year">
-          {ALL_YEARS.map((y) => (
-            <Chip key={y} active={year === y} onClick={() => setYear(year === y ? null : y)}>
-              {y}
-            </Chip>
-          ))}
-        </FilterRow>
-        <FilterRow label="key">
-          {ALL_KEYS.map((t) => (
-            <Chip
-              key={t}
-              active={tuning === t}
-              onClick={() => setTuning(tuning === t ? null : t)}
-            >
-              {t}
-            </Chip>
-          ))}
-        </FilterRow>
+        {dynamicMoods.length > 0 && (
+          <FilterRow label="mood">
+            {dynamicMoods.map((m) => (
+              <Chip key={m} active={mood === m} onClick={() => setMood(mood === m ? null : m)}>
+                {m}
+              </Chip>
+            ))}
+          </FilterRow>
+        )}
+        {dynamicYears.length > 0 && (
+          <FilterRow label="year">
+            {dynamicYears.map((y) => (
+              <Chip key={y} active={year === y} onClick={() => setYear(year === y ? null : y)}>
+                {y}
+              </Chip>
+            ))}
+          </FilterRow>
+        )}
+        {dynamicKeys.length > 0 && (
+          <FilterRow label="key">
+            {dynamicKeys.map((t) => (
+              <Chip
+                key={t}
+                active={tuning === t}
+                onClick={() => setTuning(tuning === t ? null : t)}
+              >
+                {t}
+              </Chip>
+            ))}
+          </FilterRow>
+        )}
         <div className="grid sm:grid-cols-2 gap-6 mt-4">
           <RangeRow
             label="bpm"

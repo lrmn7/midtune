@@ -106,13 +106,7 @@ export const tracks: Track[] = [
   },
 ];
 
-export const ALL_MOODS = Array.from(new Set(tracks.flatMap((t) => t.moods))).sort();
 
-export const ALL_KEYS = Array.from(new Set(tracks.map((t) => t.tuning))).sort();
-
-export const ALL_YEARS = Array.from(
-  new Set(tracks.map((t) => t.year.slice(0, 4)))
-).sort((a, b) => Number(b) - Number(a));
 
 export function getTrack(id: string): Track | undefined {
   return tracks.find((t) => t.id === id);
