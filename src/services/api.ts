@@ -41,27 +41,18 @@ export async function recordDownload(trackId: string): Promise<void> {
 export async function downloadTrack(audioUrl: string, trackId: string): Promise<void> {
   recordDownload(trackId);
   try {
-    toast("Downloading track...", { id: "download-" + trackId });
-    const response = await fetch(audioUrl);
-    if (!response.ok) throw new Error("Network response was not ok");
-    
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
+    toast.success("Download started", { id: "download-" + trackId });
     
     const a = document.createElement("a");
-    a.href = url;
-    a.download = audioUrl.split("/").pop() || "download.mp3";
+    // Use the backend proxy to bypass CORS and force the download dialog
+    a.href = `${API_BASE}/tracks/${trackId}/file`;
     a.style.display = "none";
     document.body.appendChild(a);
     a.click();
     
-    window.URL.revokeObjectURL(url);
     document.body.removeChild(a);
-    toast.success("Download started", { id: "download-" + trackId });
   } catch (error) {
-    console.error("Fetch failed (CORS?), falling back to direct navigation", error);
-    // Fallback: open in new tab if CORS blocks fetch
+    console.error("Download failed, falling back to direct navigation", error);
     window.open(audioUrl, "_blank");
-    toast.dismiss("download-" + trackId);
   }
 }
