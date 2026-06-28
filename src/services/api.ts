@@ -38,13 +38,30 @@ export async function recordDownload(trackId: string): Promise<void> {
   }
 }
 
-export function downloadTrack(audioUrl: string, trackId: string): void {
+export async function downloadTrack(audioUrl: string, trackId: string): Promise<void> {
   recordDownload(trackId);
-  const a = document.createElement("a");
-  a.href = audioUrl;
-  a.download = "";
-  a.style.display = "none";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  try {
+    toast("Downloading track...", { id: "download-" + trackId });
+    const response = await fetch(audioUrl);
+    if (!response.ok) throw new Error("Network response was not ok");
+    
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = audioUrl.split("/").pop() || "download.mp3";
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+    toast.success("Download started", { id: "download-" + trackId });
+  } catch (error) {
+    console.error("Fetch failed (CORS?), falling back to direct navigation", error);
+    // Fallback: open in new tab if CORS blocks fetch
+    window.open(audioUrl, "_blank");
+    toast.dismiss("download-" + trackId);
+  }
 }
