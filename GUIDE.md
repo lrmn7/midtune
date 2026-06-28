@@ -72,7 +72,7 @@ Open the `wrangler.toml` file in your project, then insert the `database_id` mat
 Run the `.sql` files located in the `db/` folder to the remote database:
 ```bash
 npx wrangler d1 execute midtune --remote --file=db/schema.sql
-npx wrangler d1 execute midtune --remote --file=db/seed.sql
+npx wrangler d1 execute midtune --remote --file=db/seed.sql (optional)
 ```
 
 ---
