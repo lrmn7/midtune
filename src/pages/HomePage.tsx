@@ -101,7 +101,7 @@ export default function HomePage() {
                 {isFeaturedPlaying ? "playing…" : "play"}
               </button>
               <button
-                onClick={() => downloadTrack(featured)}
+                onClick={() => downloadTrack(featured.audioUrl, featured.id)}
                 className="flex items-center gap-2 px-4 py-2 border border-foreground font-mono text-xs uppercase tracking-wider cursor-pointer hover:bg-yellow-tape transition-colors"
                 aria-label="Download track"
               >
