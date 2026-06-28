@@ -1,0 +1,19 @@
+name = "midtune"
+compatibility_date = "2024-12-01"
+pages_build_output_dir = "dist"
+
+# ─── Cloudflare D1 ───
+# Create the database first:
+#   wrangler d1 create midtune
+# Then update the database_id below.
+
+[[d1_databases]]
+binding = "DB"
+database_name = "midtune"
+database_id = "7798c630-af19-4039-a005-1febfd86d475"
+
+# ─── Optional: Cloudflare KV (for lightweight caching) ───
+# Uncomment if needed:
+[[kv_namespaces]]
+binding = "CACHE"
+id = "dd82b6320db34c7792ce20ee4e2fa628"

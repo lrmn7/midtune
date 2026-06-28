@@ -1,0 +1,5 @@
+# Environment variables for Midtune
+# ADMIN_SECRET is the password to log in to the /admin page
+ADMIN_SECRET="replace_with_a_very_strong_admin_password_123!"
+# HMAC_KEY is used to sign admin session tokens (generate a random string of at least 64 characters)
+HMAC_KEY="replace_with_a_long_and_secure_random_string_as_the_hmac_secret_key"

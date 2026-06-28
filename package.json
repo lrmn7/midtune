@@ -1,0 +1,68 @@
+{
+  "name": "midtune",
+  "version": "1.0.0",
+  "description": "Free midwest emo instrumentals for videos, games, streams, and indie projects.",
+  "author": "L RMN (https://github.com/lrmn7)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lrmn7/midtune.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lrmn7/midtune/issues"
+  },
+  "homepage": "https://midwest.listune.app",
+  "keywords": [
+    "midwest emo",
+    "instrumental",
+    "free music",
+    "copyright safe",
+    "archive",
+    "react",
+    "cloudflare pages",
+    "cloudflare d1"
+  ],
+  "private": true,
+  "license": "GPL-3.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler pages dev",
+    "dev:ui": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.2.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.575.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-router-dom": "^7.6.3",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.5.0",
+    "tailwindcss": "^4.2.1",
+    "vite-tsconfig-paths": "^6.0.2",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260628.1",
+    "@eslint/js": "^9.32.0",
+    "@types/node": "^22.16.5",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^5.2.0",
+    "eslint": "^9.32.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-prettier": "^5.2.6",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^15.15.0",
+    "prettier": "^3.7.3",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.56.1",
+    "vite": "^8.0.16"
+  }
+}
