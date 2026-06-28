@@ -12,8 +12,17 @@ export function Waveform({ seed, className = "", active = false }: Props) {
   return (
     <svg viewBox={`0 0 ${bars * 3} 28`} className={className} preserveAspectRatio="none">
       {Array.from({ length: bars }).map((_, i) => {
-        const v = ((h * (i + 1) * 9301 + 49297) % 233280) / 233280;
-        const height = 4 + v * 22;
+        // Create a track-like envelope (quieter at start/end, louder in middle)
+        const progress = i / (bars - 1);
+        const envelope = Math.sin(progress * Math.PI);
+        
+        // Pseudo-random noise based on seed and index
+        const noise = Math.abs(Math.sin(h + i * 13.73) * Math.cos(h + i * 7.19));
+        
+        // Combine noise and envelope, scale to max height (26)
+        // Add a small baseline (2) so it's never completely flat
+        const height = Math.max(2, (noise * 0.7 + 0.3) * envelope * 26);
+        
         return (
           <rect
             key={i}
